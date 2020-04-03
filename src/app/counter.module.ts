@@ -12,10 +12,11 @@ export class CounterService {
 @NgModule()
 export class CounterModule {
   static withConfig(name?: string): ModuleWithProviders {
+    const counterProviderToken = name ? name : CounterService;
     return {
       ngModule: CounterModule,
       providers: [{
-        provide: name,
+        provide: counterProviderToken,
         useClass: CounterService
       }]
     };
