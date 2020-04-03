@@ -10,8 +10,8 @@ import {CounterModule} from './counter.module';
       ],
       imports: [
         BrowserModule,
-        CounterModule.withConfig('main.CountService'),
-        CounterModule.withConfig('integration.CountService'),
+        CounterModule.builder().instanceId('main.CountService').build(),
+        CounterModule.builder().instanceId('integration.CountService').build(),
       ],
       providers: [],
       bootstrap: [AppComponent]

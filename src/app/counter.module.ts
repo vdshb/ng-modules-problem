@@ -9,16 +9,34 @@ export class CounterService {
   }
 }
 
+export interface CounterModuleBuilder {
+  instanceId(instanceId: string): CounterModuleBuilder;
+  build(): ModuleWithProviders;
+}
+
 @NgModule()
 export class CounterModule {
-  static withConfig(name?: string): ModuleWithProviders {
-    const counterProviderToken = name ? name : CounterService;
-    return {
-      ngModule: CounterModule,
-      providers: [{
-        provide: counterProviderToken,
-        useClass: CounterService
-      }]
-    };
-  }
+  private static CounterModuleBuilderImpl = class {
+    private counterProviderToken: any = CounterService;
+
+    instanceId(instanceId: string): CounterModuleBuilder {
+      this.counterProviderToken = instanceId;
+      return this;
+    }
+
+    build(): ModuleWithProviders {
+      return {
+        ngModule: CounterModule,
+        providers: [{
+          provide: this.counterProviderToken,
+          useClass: CounterService
+        }]
+      };
+    }
+  };
+
+  static builder(): CounterModuleBuilder {
+    return new CounterModule.CounterModuleBuilderImpl();
+  };
+
 }
